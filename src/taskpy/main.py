@@ -28,8 +28,14 @@ class TaskCLI:
         logger.debug(command)
         # Run the Task command
         result = subprocess.run(command, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        if result.stderr:
+        
+        # Only log stderr as error if the command actually failed
+        if result.returncode != 0:
             logger.error(result.stderr)
+        elif result.stderr:
+            logger.info(result.stderr)
+            
         if result.stdout:
             logger.info(result.stdout)
+            
         return result
